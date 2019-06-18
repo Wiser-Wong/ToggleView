@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="ToggleView">
+        <attr name="toggleBackgroundCloseColor" format="color|reference" />
+        <attr name="toggleBackgroundOpenColor" format="color|reference" />
+        <attr name="toggleBarColor" format="color|reference" />
+        <attr name="toggleBarPadding" format="dimension|reference" />
+        <attr name="toggleRadius" format="dimension|reference" />
+        <attr name="toggleFrameWidth" format="dimension|reference" />
+        <attr name="toggleFrameColor" format="color|reference" />
+        <attr name="toggleIsFrame" format="boolean" />
+    </declare-styleable>
+
+</resources>
