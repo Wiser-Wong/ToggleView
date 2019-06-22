@@ -10,6 +10,10 @@
         <attr name="toggleFrameWidth" format="dimension|reference" />
         <attr name="toggleFrameColor" format="color|reference" />
         <attr name="toggleIsFrame" format="boolean" />
+        <attr name="toggleIsHasShadow" format="boolean" />
+        <attr name="toggleShadowColor" format="color|reference" />
+        <attr name="toggleShadowPadding" format="dimension|reference" />
+        <attr name="toggleBarSrc" format="reference" />
     </declare-styleable>
 
 </resources>

@@ -18,7 +18,11 @@
         app:toggleFrameColor="#ff00ff"
         app:toggleFrameWidth="1dp"
         app:toggleIsFrame="false"
-        app:toggleRadius="13dp" />
+        app:toggleRadius="13dp"
+        app:toggleIsHasShadow="true"
+        app:toggleShadowPadding="10dp"
+        app:toggleShadowColor="@color/colorPrimary"
+        app:toggleBarSrc="@mipmap/chat_toggle_btn"/>
 
     <Button
         android:layout_width="wrap_content"
