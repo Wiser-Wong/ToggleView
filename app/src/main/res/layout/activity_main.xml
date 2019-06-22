@@ -5,24 +5,80 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:text="有边框Toggle带阴影"
+        android:layout_gravity="center"/>
+
     <com.wiser.toggle.ToggleView
         android:id="@+id/toggleView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        app:toggleBackgroundCloseColor="#80cccccc"
+        app:toggleBackgroundOpenColor="#0000ff"
+        app:toggleBarColor="#00ff00"
+        app:toggleBarPadding="3dp"
+        app:toggleFrameColor="#ffff00"
+        app:toggleFrameWidth="1dp"
+        app:toggleIsFrame="true"
+        app:toggleIsHasShadow="true"
+        app:toggleRadius="13dp"
+        app:toggleShadowColor="@color/colorAccent"
+        app:toggleShadowPadding="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:text="无边框Toggle带阴影"
+        android:layout_gravity="center"/>
+
+    <com.wiser.toggle.ToggleView
+        android:id="@+id/toggleView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:padding="10dp"
-        app:toggleBackgroundCloseColor="#cccccc"
-        app:toggleBackgroundOpenColor="#00ff00"
-        app:toggleBarColor="#ffffff"
+        app:toggleBackgroundCloseColor="#80cccccc"
+        app:toggleBackgroundOpenColor="#0000ff"
+        app:toggleBarColor="@color/colorAccent"
         app:toggleBarPadding="3dp"
         app:toggleFrameColor="#ff00ff"
         app:toggleFrameWidth="1dp"
         app:toggleIsFrame="false"
-        app:toggleRadius="13dp"
         app:toggleIsHasShadow="true"
-        app:toggleShadowPadding="10dp"
-        app:toggleShadowColor="@color/colorPrimary"
-        app:toggleBarSrc="@mipmap/chat_toggle_btn"/>
+        app:toggleRadius="13dp"
+        app:toggleShadowColor="#ffff00"
+        app:toggleShadowPadding="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:text="图片Toggle 带阴影"
+        android:layout_gravity="center"/>
+
+    <com.wiser.toggle.ToggleView
+        android:id="@+id/toggleView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="10dp"
+        app:toggleBackgroundCloseColor="#80cccccc"
+        app:toggleBackgroundOpenColor="#ffff00"
+        app:toggleBarColor="#ffffff"
+        app:toggleBarPadding="3dp"
+        app:toggleBarSrc="@mipmap/chat_toggle_btn"
+        app:toggleFrameColor="#ff00ff"
+        app:toggleFrameWidth="1dp"
+        app:toggleIsFrame="false"
+        app:toggleIsHasShadow="true"
+        app:toggleRadius="13dp"
+        app:toggleShadowColor="@color/colorAccent"
+        app:toggleShadowPadding="10dp" />
 
     <Button
         android:layout_width="wrap_content"

@@ -135,6 +135,8 @@ public class ToggleView extends View {
 		if (!isToggleFrame) frameWidth = 0;
 
 		backgroundLength = barHeight * 2f + 2f * barPadding + 2f * frameWidth;
+
+		if (barShadowPadding > barPadding) barShadowPadding = barPadding;
 	}
 
 	private void initPaint() {
@@ -279,9 +281,8 @@ public class ToggleView extends View {
 		int widthSize = MeasureSpec.getSize(widthMeasureSpec);
 		int heightMode = MeasureSpec.getMode(heightMeasureSpec);
 		int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-		int height = (int) (heightMode == MeasureSpec.UNSPECIFIED ? (barHeight + Math.max(barPadding, barShadowPadding) * 2 + 2 * frameWidth + getPaddingTop() + getPaddingBottom())
-				: heightMode == MeasureSpec.EXACTLY ? heightSize
-						: Math.min(barHeight + Math.max(barPadding, barShadowPadding) * 2 + 2 * frameWidth + getPaddingTop() + getPaddingBottom(), heightSize));
+		int height = (int) (heightMode == MeasureSpec.UNSPECIFIED ? (barHeight + barPadding * 2 + 2 * frameWidth + getPaddingTop() + getPaddingBottom())
+				: heightMode == MeasureSpec.EXACTLY ? heightSize : Math.min(barHeight + barPadding * 2 + 2 * frameWidth + getPaddingTop() + getPaddingBottom(), heightSize));
 		int width = (int) (widthMode == MeasureSpec.UNSPECIFIED ? (backgroundLength + getPaddingLeft() + getPaddingRight())
 				: widthMode == MeasureSpec.EXACTLY ? widthSize : Math.min(backgroundLength + getPaddingLeft() + getPaddingRight(), widthSize));
 		setMeasuredDimension(width, height);
