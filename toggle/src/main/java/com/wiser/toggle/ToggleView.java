@@ -1,5 +1,7 @@
 package com.wiser.toggle;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -22,61 +24,71 @@ import android.view.ViewParent;
  */
 public class ToggleView extends View {
 
-	private final int			CANVAS_BAR_COLOR		= 10;				// 绘制Bar颜色
+	private final int			CANVAS_BAR_COLOR	= 10;				// 绘制Bar颜色
 
-	private final int			CANVAS_BAR_DRAWABLE		= 11;				// 绘制BarDrawable
+	private final int			CANVAS_BAR_DRAWABLE	= 11;				// 绘制BarDrawable
 
-	private int					barCanvasModel			= CANVAS_BAR_COLOR;	// 绘制游标Bar模式
+	private int					barCanvasModel		= CANVAS_BAR_COLOR;	// 绘制游标Bar模式
 
-	private Paint				backgroundPaint;							// 底色画笔
+	private Paint				backgroundPaint;						// 底色画笔
 
-	private Paint				framePaint;									// 边框画笔
+	private Paint				framePaint;								// 边框画笔
 
-	private Paint				barPaint;									// 开关画笔
+	private Paint				barPaint;								// 开关画笔
 
-	private int					backgroundCloseColor	= Color.GRAY;		// 背景色
+	private int					backgroundCloseColor;					// 背景色
 
-	private int					backgroundOpenColor		= Color.GREEN;		// 背景色
+	private int					backgroundOpenColor;					// 背景色
 
-	private int					barColor				= Color.RED;		// 开关背景色
+	private int					barOpenColor;							// 开关背景色
 
-	private int					barShadowColor			= Color.BLACK;		// bar阴影颜色
+	private int					barCloseColor;							// 开关背景色
 
-	private int					frameColor				= Color.GRAY;		// 边框颜色
+	private int					barShadowColor;							// bar阴影颜色
 
-	private float				frameWidth;									// 边框宽度
+	private int					frameColor;								// 边框颜色
 
-	private float				toggleRadius			= 40;				// 圆角度
+	private float				frameWidth;								// 边框宽度
 
-	private float				barHeight				= toggleRadius * 2;	// 开关高度
+	private float				toggleRadius		= 40;				// 圆角度
 
-	private float				backgroundLength;							// 背景长度
+	private float				barHeight			= toggleRadius * 2;	// 开关高度
 
-	private float				barPadding				= 5;				// 开关与背景间距
+	private float				backgroundLength;						// 背景长度
 
-	private float				barShadowPadding		= 20;				// 开关与背景间距
+	private float				barPadding			= 5;				// 开关与背景间距
 
-	private Drawable			barDrawable;								// 游标图片
+	private float				barShadowPadding	= 20;				// 开关与背景间距
 
-	private RectF				backgroundRectF;							// 背景矩阵
+	private Drawable			barDrawable;							// 游标图片
 
-	private RectF				leftArgRectF;								// 左半圆矩阵
+	private RectF				backgroundRectF;						// 背景矩阵
 
-	private RectF				rightArgRectF;								// 右半圆矩阵
+	private RectF				leftArgRectF;							// 左半圆矩阵
 
-	private RectF				barRectF;									// 开关矩阵
+	private RectF				rightArgRectF;							// 右半圆矩阵
 
-	private float				downX, downY;								// 按下坐标XY 以及记录移动位置
+	private RectF				barRectF;								// 开关矩阵
 
-	private boolean				isToggle;									// 是否开关打开
+	private float				downX, downY;							// 按下坐标XY 以及记录移动位置
 
-	private boolean				isToggleFrame;								// 是否有边框
+	private boolean				isToggle;								// 是否开关打开
 
-	private boolean				isHasShadow;								// 是否有阴影
+	private boolean				isToggleFrame;							// 是否有边框
 
-	private float				mOffset;									// 偏移量
+	private boolean				isHasShadow;							// 是否有阴影
 
-	private OnToggleListener	onToggleListener;							// 监听
+	private float				mOffset;								// 偏移量
+
+	private boolean				isToggleChangeBarColor;					// 是否开关bar颜色变化
+
+	private OnToggleListener	onToggleListener;						// 监听
+
+	private boolean				isPressBar;								// 是否按在Bar上
+
+	private boolean				isMoveBar;								// 是否移动Bar
+
+	private boolean				isToggleAnimEnd		= true;				// 是否动画结束
 
 	public ToggleView(Context context) {
 		super(context);
@@ -95,14 +107,16 @@ public class ToggleView extends View {
 		TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ToggleView);
 		backgroundCloseColor = typedArray.getColor(R.styleable.ToggleView_toggleBackgroundCloseColor, getResources().getColor(android.R.color.darker_gray));
 		backgroundOpenColor = typedArray.getColor(R.styleable.ToggleView_toggleBackgroundOpenColor, getResources().getColor(android.R.color.holo_green_dark));
-		barColor = typedArray.getColor(R.styleable.ToggleView_toggleBarColor, getResources().getColor(android.R.color.white));
+		barOpenColor = typedArray.getColor(R.styleable.ToggleView_toggleBarOpenColor, getResources().getColor(android.R.color.white));
+		barCloseColor = typedArray.getColor(R.styleable.ToggleView_toggleBarCloseColor, getResources().getColor(android.R.color.darker_gray));
 		barPadding = typedArray.getDimension(R.styleable.ToggleView_toggleBarPadding, barPadding);
 		toggleRadius = typedArray.getDimension(R.styleable.ToggleView_toggleRadius, toggleRadius);
 		frameWidth = typedArray.getDimension(R.styleable.ToggleView_toggleFrameWidth, frameWidth);
 		frameColor = typedArray.getColor(R.styleable.ToggleView_toggleFrameColor, getResources().getColor(android.R.color.darker_gray));
 		isToggleFrame = typedArray.getBoolean(R.styleable.ToggleView_toggleIsFrame, isToggleFrame);
 		isHasShadow = typedArray.getBoolean(R.styleable.ToggleView_toggleIsHasShadow, isHasShadow);
-		barShadowColor = typedArray.getColor(R.styleable.ToggleView_toggleShadowColor, getResources().getColor(android.R.color.darker_gray));
+		isToggleChangeBarColor = typedArray.getBoolean(R.styleable.ToggleView_toggleIsToggleChangeBarColor, isToggleChangeBarColor);
+		barShadowColor = typedArray.getColor(R.styleable.ToggleView_toggleShadowColor, getResources().getColor(android.R.color.black));
 		barShadowPadding = typedArray.getDimension(R.styleable.ToggleView_toggleShadowPadding, barShadowPadding);
 		int barSrcId = typedArray.getResourceId(R.styleable.ToggleView_toggleBarSrc, -1);
 
@@ -149,7 +163,7 @@ public class ToggleView extends View {
 		barPaint = new Paint();
 		barPaint.setStyle(Paint.Style.FILL);
 		barPaint.setAntiAlias(true);
-		barPaint.setColor(barColor);
+		barPaint.setColor(barOpenColor);
 		barPaint.setTextAlign(Paint.Align.CENTER);
 
 		framePaint = new Paint();
@@ -222,6 +236,10 @@ public class ToggleView extends View {
 				}
 				break;
 			case CANVAS_BAR_COLOR:// 绘制颜色
+				if (isToggleChangeBarColor) {
+					if (isToggle()) barPaint.setColor(barOpenColor);
+					else barPaint.setColor(barCloseColor);
+				}
 				canvas.drawCircle(barRectF.left + toggleRadius, barRectF.top + toggleRadius, toggleRadius, barPaint);
 				break;
 		}
@@ -239,15 +257,27 @@ public class ToggleView extends View {
 	private void scrollToEnd() {
 		ValueAnimator animator;
 		if (isToggle) {
-			animator = ValueAnimator.ofFloat(0, backgroundLength - 2f * (barPadding + toggleRadius) - 2f * frameWidth);
+			animator = ValueAnimator.ofFloat(mOffset, backgroundLength - 2f * (barPadding + toggleRadius) - 2f * frameWidth);
 		} else {
-			animator = ValueAnimator.ofFloat(backgroundLength - 2f * (barPadding + toggleRadius) - 2f * frameWidth, 0);
+			animator = ValueAnimator.ofFloat(mOffset, 0);
 		}
 		animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
 			@Override public void onAnimationUpdate(ValueAnimator animation) {
 				mOffset = (float) animation.getAnimatedValue();
 				postInvalidate();
+			}
+		});
+		animator.addListener(new AnimatorListenerAdapter() {
+
+			@Override public void onAnimationStart(Animator animation) {
+				super.onAnimationStart(animation);
+				isToggleAnimEnd = false;
+			}
+
+			@Override public void onAnimationEnd(Animator animation) {
+				super.onAnimationEnd(animation);
+				isToggleAnimEnd = true;
 			}
 		});
 		animator.setDuration(250);
@@ -288,19 +318,44 @@ public class ToggleView extends View {
 		setMeasuredDimension(width, height);
 	}
 
+	// 计算按下的位置是否是在游标上
+	private boolean isPressBar() {
+		return downX >= barRectF.left && downX <= barRectF.right && downY >= barRectF.top && downY <= barRectF.bottom;
+	}
+
 	@SuppressLint("ClickableViewAccessibility") @Override public boolean onTouchEvent(MotionEvent event) {
+		if (!isToggleAnimEnd) return super.onTouchEvent(event);
 		switch (event.getAction()) {
 			case MotionEvent.ACTION_DOWN:
 				downTouch();
 				downX = event.getX();
 				downY = event.getY();
+				// 是否按下bar
+				isPressBar = isPressBar();
 				break;
 			case MotionEvent.ACTION_MOVE:
+				isMoveBar = false;
+				if (isPressBar) {
+					float moveX = event.getX() - downX;
+					if (Math.abs(moveX) > 5) isMoveBar = true;
+					if (!isToggle()) {
+						if (moveX > 0 && Math.abs(moveX) > (backgroundLength - 2f * (barPadding + toggleRadius) - 2f * frameWidth))
+							mOffset = backgroundLength - 2f * (barPadding + toggleRadius) - 2f * frameWidth;
+						else if (moveX < 0) mOffset = 0;
+						else mOffset = Math.abs(moveX);
+					} else {
+						if (moveX < 0 && Math.abs(moveX) > (backgroundLength - 2f * (barPadding + toggleRadius) - 2f * frameWidth)) mOffset = 0;
+						else if (moveX > 0) mOffset = (backgroundLength - 2f * (barPadding + toggleRadius) - 2f * frameWidth);
+						else mOffset = (backgroundLength - 2f * (barPadding + toggleRadius) - 2f * frameWidth) - Math.abs(moveX);
+					}
+					postInvalidate();
+				}
 				break;
 			case MotionEvent.ACTION_CANCEL:
 			case MotionEvent.ACTION_UP:
 				upTouch();
-				isToggle = !isToggle;
+				if (isPressBar && isMoveBar) isToggle = mOffset > (backgroundLength - 2f * (barPadding + toggleRadius) - 2f * frameWidth) / 2;
+				else isToggle = !isToggle;
 				scrollToEnd();
 				if (onToggleListener != null) onToggleListener.toggle(isToggle);
 				break;
@@ -332,7 +387,12 @@ public class ToggleView extends View {
 	private void detach() {
 		backgroundPaint = null;
 		barPaint = null;
+		framePaint = null;
 		backgroundRectF = null;
 		barRectF = null;
+		leftArgRectF = null;
+		rightArgRectF = null;
+		barDrawable = null;
+		onToggleListener = null;
 	}
 }
