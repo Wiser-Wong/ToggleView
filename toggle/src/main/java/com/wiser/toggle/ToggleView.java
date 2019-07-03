@@ -384,7 +384,7 @@ public class ToggleView extends View {
 //		detach();
 	}
 
-	private void detach() {
+	public void detach() {
 		backgroundPaint = null;
 		barPaint = null;
 		framePaint = null;
